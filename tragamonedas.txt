@@ -1,33 +1,29 @@
 #include <iostream>
 #include <conio2.h>
-#include<ctime>
-#include <Windows.h> 
+#include <ctime>
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
 	
-	double t1,t2;
-	double tempo=0.0;
-	double delay=0.1;
+	// Declaracion e inicializacion de variables 	
 	int monedas=0;
-	int i=0;
+	bool play=true;
+	bool lose=false;
+	bool bandera=true;
+	char tecla=' ';
+	int contAnimacion=0;
 	
+	srand(time(NULL));	
 	int n1=0;
 	int n2=0;
 	int n3=0;
 	
-	bool play=true;
-	bool lose=false;
-	bool flag=true;
-	char tecla;
-	int contador=0;
-	
-	cout<<"***********************************************"<<endl;
-	cout<<"*       P       |        I        |     E     *"<<endl;
-	cout<<"* Tirar palanca | Insertar moneda | Retirarse *"<<endl;
-	cout<<"*  El juego permite ingresar hasta 9 monedas  *"<<endl;
-	cout<<"*                                             *"<<endl;
+	string header1="* * * * * * * * * * * * * * * * * * * * * * * *";
+	string header2="*       P       |        I        |     E     *";
+	string header3="* Tirar palanca | Insertar moneda | Retirarse *";
+	string header4="*  El juego permite ingresar hasta 9 monedas  *";
+	string header5="*                                             *";
 	
 	string linea1="*                   \\|||/                     *";
 	string linea2="*                   (   )                     *";
@@ -38,19 +34,67 @@ int main(int argc, char *argv[]) {
 	string linea6="*          |                     |            *";
 	string linea7="*          |    .-----------.    |            *";
 	string linea8="*          |    | ";
-	string linea_aux=" | ";
+	string barraVertical=" | ";
 	string linea8b="   |            *";	
 	string linea9="*          |    .-----------.    |            *";	
 	string linea10="*          |                     |            *";					
 	string linea11="*          |                     |            *";
-	string linea12="*          .---------------oo0---.            *";
+	string linea12="*          :---------------oo0---:            *";
 	string linea13="*                  |  |  |                    *";
 	string linea14="*                  |  |  |                    *"; 
 	string linea15="*                  |__|__|                    *";
 	string linea16="*                ___|| ||___                  *";
 	string linea17="*               (____] [____)                 *";
-	string linea18="***********************************************";
+	string linea18="* * * * * * * * * * * * * * * * * * * * * * * *";
 	
+	// ****** Calibracion del reloj *****//
+	gotoxy(10,10);
+	cout<<"CARGANDO...ESPERE UNOS INSTANTES...";
+	
+	int t1, t2;	
+	int cont=0;
+	int ciclos=0;
+	int sumaCiclos=0;
+	int promedioCiclos=0;
+	int contCiclos=0;
+	
+	double delay=0.4;
+	int referenciaCiclos=0;
+	
+	while (cont<10){
+		
+		t1=time(NULL);
+		t2=time(NULL);
+		
+		while (t1==t2){
+			
+			t2=time(NULL);
+			ciclos++;
+			
+		}
+		
+		if (cont>0){
+			
+			sumaCiclos+=ciclos;
+		}
+		
+		cont++;
+		ciclos=0;
+	}
+	
+	promedioCiclos=sumaCiclos/(cont-1);	
+	referenciaCiclos=promedioCiclos*delay;	
+	
+	// Se muestran los headers principales
+	gotoxy(1,1);
+
+	cout<<header1<<endl;
+	cout<<header2<<endl;
+	cout<<header3<<endl;
+	cout<<header4<<endl;
+	cout<<header5<<endl;
+	
+	//Loop principal del juego
 	while (play){
 		
 		gotoxy(1,6);
@@ -62,7 +106,7 @@ int main(int argc, char *argv[]) {
 		cout<<linea5<<monedas<<linea5b<<endl;
 		cout<<linea6<<endl;
 		cout<<linea7<<endl;
-		cout<<linea8<<n1<<linea_aux<<n2<<linea_aux<<n3<<linea_aux<<linea8b<<endl;
+		cout<<linea8<<n1<<barraVertical<<n2<<barraVertical<<n3<<barraVertical<<linea8b<<endl;
 		cout<<linea9<<endl;
 		cout<<linea10<<endl;
 		cout<<linea11<<endl;
@@ -79,9 +123,9 @@ int main(int argc, char *argv[]) {
 			play=false;
 		}
 		
-		if (kbhit() || !flag){
+		if (kbhit() || !bandera){
 			
-			if (flag){
+			if (bandera){
 				
 				tecla=getch();	
 			} 
@@ -93,41 +137,41 @@ int main(int argc, char *argv[]) {
 				
 				if (monedas>0){
 				
-					if (contador==0){
+					if (contAnimacion==0){
 						
-						flag=false;
+						bandera=false;
 						linea13=linea13.replace(30,1,"*");
 						
-					} if (contador==1){
+					} if (contAnimacion==1){
 						
 						linea13=linea13.replace(30,1," ");
 						linea14=linea14.replace(30,1,"*");					
 						
-					} if (contador==2){
+					} if (contAnimacion==2){
 						
 						linea14=linea14.replace(30,1," ");
 						linea15=linea15.replace(30,1,"*");
 						
-					} if (contador==3){
+					} if (contAnimacion==3){
 						
 						linea15=linea15.replace(30,1," ");
 						linea16=linea16.replace(30,1,"*");
 						
-					} if (contador==4){
+					} if (contAnimacion==4){
 						
 						linea16=linea16.replace(30,1," ");
 						linea17=linea17.replace(30,1,"*");
 						
-					} if (contador==5){
+					} if (contAnimacion==5){
 						
 						linea17=linea17.replace(30,1," ");
 						monedas--;
 
-						contador=-1;	
+						contAnimacion=-1;	
 					}	
 					
-					contador++;
-					break;				
+					contAnimacion++;
+					break;
 				} 
 				
 				lose=true;
@@ -135,29 +179,28 @@ int main(int argc, char *argv[]) {
 				
 			//Animacion del ingreso de monedas	
 			case 'I':
-				
-				
-				if (contador==0){
+		
+				if (contAnimacion==0){
 					
-					flag=false;
+					bandera=false;
 					linea1=linea1.replace(29,1,"*");
 					
-				} if (contador==1){
+				} if (contAnimacion==1){
 					
 					linea1=linea1.replace(29,1," ");
 					linea2=linea2.replace(29,1,"*");					
 					
-				} if (contador==2){
+				} if (contAnimacion==2){
 					
 					linea2=linea2.replace(29,1," ");
 					linea3=linea3.replace(29,1,"*");
 					
-				} if (contador==3){
+				} if (contAnimacion==3){
 					
 					linea3=linea3.replace(29,1," ");
 					linea4=linea4.replace(29,1,"*");
 					
-				} if (contador==4){
+				} if (contAnimacion==4){
 					
 					linea4=linea4.replace(29,1,"-");
 					
@@ -170,12 +213,11 @@ int main(int argc, char *argv[]) {
 						linea10=linea10.replace(16,13,"I AM FULL!!!!");
 					}
 					
-					flag=true;
-					contador=-1;
-					
+					bandera=true;
+					contAnimacion=-1;					
 				}
 				
-				contador++;
+				contAnimacion++;
 				break;
 			
 			//Animacion de la palanca
@@ -187,9 +229,9 @@ int main(int argc, char *argv[]) {
 					n2=rand()%7+1;
 					n3=rand()%7+1;
 					
-					if (i==0){
+					if (contAnimacion==0){
 
-						flag=false;
+						bandera=false;
 						
 						linea2=linea2.replace(21,1,"o");
 						linea2=linea2.replace(23,1,"o");
@@ -198,7 +240,7 @@ int main(int argc, char *argv[]) {
 						
 					}
 					
-					if (i==29){
+					if (contAnimacion==29){
 						
 						monedas--;
 						
@@ -225,33 +267,27 @@ int main(int argc, char *argv[]) {
 							}
 						}
 						
-						flag=true;
-						i=-1;					
+						bandera=true;
+						contAnimacion=-1;					
 					}
-					
-					i++;
 				}
 				
+				contAnimacion++;
 				break;
 
 			}
 		}
 		
-		///////////////////////Delay
-		t1=clock();
-		
-		while (tempo<delay){
+		//DELAY
+		while (contCiclos<referenciaCiclos){			
 			
-			t2=clock();
-			
-			tempo=(double(t2-t1)/CLOCKS_PER_SEC);
+			contCiclos++;
 		}
 		
-		tempo=0.0;
-		//////////////////////
+		ciclos=0;
+		contCiclos=0;
 		
 	}
 	
 	return 0;
 }
-

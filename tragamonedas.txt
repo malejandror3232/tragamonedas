@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
 	string linea3="*                    \\ /                      *";
 	string linea4="*          .----oo0--(_)---------.            *";
 	string linea5="*          | Coins ";
-	string linea5b="             |            *";
+	string linea5b="            |            *";
 	string linea6="*          |                     |            *";
 	string linea7="*          |    .-----------.    |            *";
 	string linea8="*          |    | ";
@@ -48,10 +48,13 @@ int main(int argc, char *argv[]) {
 	string linea18="* * * * * * * * * * * * * * * * * * * * * * * *";
 	
 	// ****** Calibracion del reloj *****//
+	//Se mide cuantos ciclos en promedio del bucle while transcurren durante un segundo. Se hacen 
+	//10 mediciones para obtener un promedio. Ese promedio representaria una unidad de tiempo, que
+	//luego con el delay puedo ajustar al valor que desee 
 	gotoxy(10,10);
 	cout<<"CARGANDO...ESPERE UNOS INSTANTES...";
 	
-	int t1, t2;	
+	time_t t1, t2;	
 	int cont=0;
 	int ciclos=0;
 	int sumaCiclos=0;
@@ -69,8 +72,7 @@ int main(int argc, char *argv[]) {
 		while (t1==t2){
 			
 			t2=time(NULL);
-			ciclos++;
-			
+			ciclos++;			
 		}
 		
 		if (cont>0){
@@ -84,6 +86,9 @@ int main(int argc, char *argv[]) {
 	
 	promedioCiclos=sumaCiclos/(cont-1);	
 	referenciaCiclos=promedioCiclos*delay;	
+	gotoxy(1,25);
+	cout<<"Promedio ciclos: " <<promedioCiclos<<endl;
+	cout<<"Ciclos en 0.4 seg: " <<referenciaCiclos;
 	
 	// Se muestran los headers principales
 	gotoxy(1,1);
@@ -103,7 +108,15 @@ int main(int argc, char *argv[]) {
 		cout<<linea2<<endl;	
 		cout<<linea3<<endl;
 		cout<<linea4<<endl;		
-		cout<<linea5<<monedas<<linea5b<<endl;
+		cout<<linea5;
+		
+		if (monedas<10){
+			cout<<" "<<monedas;
+		}else{
+			cout<<monedas;
+		}
+			
+		cout<<linea5b<<endl;
 		cout<<linea6<<endl;
 		cout<<linea7<<endl;
 		cout<<linea8<<n1<<barraVertical<<n2<<barraVertical<<n3<<barraVertical<<linea8b<<endl;
@@ -223,7 +236,7 @@ int main(int argc, char *argv[]) {
 			//Animacion de la palanca
 			case 'P':
 				
-				if (monedas>0){
+				if (monedas>=0){					
 					
 					n1=rand()%7+1;
 					n2=rand()%7+1;
@@ -231,6 +244,7 @@ int main(int argc, char *argv[]) {
 					
 					if (contAnimacion==0){
 
+						monedas--;
 						bandera=false;
 						
 						linea2=linea2.replace(21,1,"o");
@@ -241,8 +255,6 @@ int main(int argc, char *argv[]) {
 					}
 					
 					if (contAnimacion==29){
-						
-						monedas--;
 						
 						if(n1==n2 && n2==n3){
 							

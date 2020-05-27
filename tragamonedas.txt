@@ -11,6 +11,7 @@ int main(int argc, char *argv[]) {
 	bool play=true;
 	bool lose=false;
 	bool bandera=true;
+	bool habilitarIngreso=true;
 	char tecla=' ';
 	int contAnimacion=0;
 	
@@ -19,11 +20,18 @@ int main(int argc, char *argv[]) {
 	int n2=0;
 	int n3=0;
 	
+	float delay=0.07f;
+	clock_t t1, t2, tiempo;
+	tiempo=CLOCKS_PER_SEC*delay;
+	t1=0;
+	t2=0;
+	
 	string header1="* * * * * * * * * * * * * * * * * * * * * * * *";
 	string header2="*       P       |        I        |     E     *";
 	string header3="* Tirar palanca | Insertar moneda | Retirarse *";
-	string header4="*  El juego permite ingresar hasta 9 monedas  *";
-	string header5="*                                             *";
+	string header4="*                                             *";
+	string header5="*      Ingrese hasta 9 monedas por ronda      *";
+	string header6="*                                             *";
 	
 	string linea1="*                   \\|||/                     *";
 	string linea2="*                   (   )                     *";
@@ -46,50 +54,7 @@ int main(int argc, char *argv[]) {
 	string linea16="*                ___|| ||___                  *";
 	string linea17="*               (____] [____)                 *";
 	string linea18="* * * * * * * * * * * * * * * * * * * * * * * *";
-	
-	// ****** Calibracion del reloj *****//
-	//Se mide cuantos ciclos en promedio del bucle while transcurren durante un segundo. Se hacen 
-	//10 mediciones para obtener un promedio. Ese promedio representaria una unidad de tiempo, que
-	//luego con el delay puedo ajustar al valor que desee 
-	gotoxy(10,10);
-	cout<<"CARGANDO...ESPERE UNOS INSTANTES...";
-	
-	time_t t1, t2;	
-	int cont=0;
-	int ciclos=0;
-	int sumaCiclos=0;
-	int promedioCiclos=0;
-	int contCiclos=0;
-	
-	double delay=0.4;
-	int referenciaCiclos=0;
-	
-	while (cont<10){
 		
-		t1=time(NULL);
-		t2=time(NULL);
-		
-		while (t1==t2){
-			
-			t2=time(NULL);
-			ciclos++;			
-		}
-		
-		if (cont>0){
-			
-			sumaCiclos+=ciclos;
-		}
-		
-		cont++;
-		ciclos=0;
-	}
-	
-	promedioCiclos=sumaCiclos/(cont-1);	
-	referenciaCiclos=promedioCiclos*delay;	
-	gotoxy(1,25);
-	cout<<"Promedio ciclos: " <<promedioCiclos<<endl;
-	cout<<"Ciclos en 0.4 seg: " <<referenciaCiclos;
-	
 	// Se muestran los headers principales
 	gotoxy(1,1);
 
@@ -98,11 +63,12 @@ int main(int argc, char *argv[]) {
 	cout<<header3<<endl;
 	cout<<header4<<endl;
 	cout<<header5<<endl;
+	cout<<header6<<endl;
 	
 	//Loop principal del juego
 	while (play){
 		
-		gotoxy(1,6);
+		gotoxy(1,7);
 		
 		cout<<linea1<<endl;
 		cout<<linea2<<endl;	
@@ -143,6 +109,7 @@ int main(int argc, char *argv[]) {
 				tecla=getch();	
 			} 
 			
+			//Opciones del juego: 'I' (Ingresar monedas), 'P' (Tirar palanca) y 'E' (retirarse)
 			switch(tecla){
 				
 			//Animacion del egreso de monedas
@@ -192,51 +159,49 @@ int main(int argc, char *argv[]) {
 				
 			//Animacion del ingreso de monedas	
 			case 'I':
-		
-				if (contAnimacion==0){
+				
+				if (habilitarIngreso && monedas<9){
 					
-					bandera=false;
-					linea1=linea1.replace(29,1,"*");
-					
-				} if (contAnimacion==1){
-					
-					linea1=linea1.replace(29,1," ");
-					linea2=linea2.replace(29,1,"*");					
-					
-				} if (contAnimacion==2){
-					
-					linea2=linea2.replace(29,1," ");
-					linea3=linea3.replace(29,1,"*");
-					
-				} if (contAnimacion==3){
-					
-					linea3=linea3.replace(29,1," ");
-					linea4=linea4.replace(29,1,"*");
-					
-				} if (contAnimacion==4){
-					
-					linea4=linea4.replace(29,1,"-");
-					
-					if(monedas<9){
+					if (contAnimacion==0){
 						
-						monedas++;								
+						bandera=false;
+						linea1=linea1.replace(29,1,"*");
 						
-					} else {
+					} if (contAnimacion==1){
 						
-						linea10=linea10.replace(16,13,"I AM FULL!!!!");
+						linea1=linea1.replace(29,1," ");
+						linea2=linea2.replace(29,1,"*");					
+						
+					} if (contAnimacion==2){
+						
+						linea2=linea2.replace(29,1," ");
+						linea3=linea3.replace(29,1,"*");
+						
+					} if (contAnimacion==3){
+						
+						linea3=linea3.replace(29,1," ");
+						linea4=linea4.replace(29,1,"*");
+						
+					} if (contAnimacion==4){
+						
+						monedas++;
+						linea4=linea4.replace(29,1,"-");
+						
+						bandera=true;
+						contAnimacion=-1;					
 					}
 					
-					bandera=true;
-					contAnimacion=-1;					
+					contAnimacion++;
+					break;					
 				}
-				
-				contAnimacion++;
 				break;
-			
+	
 			//Animacion de la palanca
 			case 'P':
 				
-				if (monedas>=0){					
+				if (monedas>0){					
+					
+					habilitarIngreso=false;
 					
 					n1=rand()%7+1;
 					n2=rand()%7+1;
@@ -244,7 +209,6 @@ int main(int argc, char *argv[]) {
 					
 					if (contAnimacion==0){
 
-						monedas--;
 						bandera=false;
 						
 						linea2=linea2.replace(21,1,"o");
@@ -256,6 +220,7 @@ int main(int argc, char *argv[]) {
 					
 					if (contAnimacion==29){
 						
+						monedas--;
 						if(n1==n2 && n2==n3){
 							
 							int sumaMonedas=(n1+n2+n3);
@@ -274,8 +239,8 @@ int main(int argc, char *argv[]) {
 							
 							if (monedas==0){
 								
-								lose=true;
-								linea10=linea10.replace(16,13,"YOU LOSE!!!!!");
+								habilitarIngreso=true;
+								linea10=linea10.replace(16,13,"FILL ME!!!!!!");
 							}
 						}
 						
@@ -290,15 +255,17 @@ int main(int argc, char *argv[]) {
 			}
 		}
 		
-		//DELAY
-		while (contCiclos<referenciaCiclos){			
+		//Retraso antes de volver al loop principal	
+		t1=clock();
+		
+		while ((t2-t1)<tiempo){
 			
-			contCiclos++;
+			t2=clock();
+		
 		}
 		
-		ciclos=0;
-		contCiclos=0;
-		
+		t2=0;
+
 	}
 	
 	return 0;
